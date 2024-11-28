@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { readGames, writeGames } from "@/utils/database";
 
 export async function POST(req: NextRequest, context: any) {
-    const { gameId } = await context.params;
+    const { gameId } = context.params;
 
     const games = await readGames();
 
@@ -13,13 +13,6 @@ export async function POST(req: NextRequest, context: any) {
 
     const game = games[gameId];
 
-    // if (game.state !== "waiting") {
-    //     return NextResponse.json(
-    //         { error: "Game has already started" },
-    //         { status: 400 }
-    //     );
-    // }
-
     if (game.players.length < 5) {
         return NextResponse.json(
             { error: "At least 5 players are required to start the game" },
@@ -27,15 +20,17 @@ export async function POST(req: NextRequest, context: any) {
         );
     }
 
-    // Generate roles based on the number of players
+    // Generate and shuffle roles
     const roles = generateRoles(game.players.length);
     const shuffledRoles = roles.sort(() => Math.random() - 0.5);
 
     // Assign roles to players
     game.players.forEach((player: any, index: number) => {
-        player.role = shuffledRoles[index];
+        const { faction, identity } = shuffledRoles[index];
+        player.role = { faction, identity };
     });
 
+    // Update game state
     game.state = "started";
     await writeGames(games);
 
@@ -45,9 +40,9 @@ export async function POST(req: NextRequest, context: any) {
 function generateRoles(
     playerCount: number
 ): { faction: string; identity: string }[] {
-    const roles = [];
+    const roles: { faction: string; identity: string }[] = [];
 
-    // Distribution of roles based on the player count
+    // Determine number of roles
     const liberalCount =
         playerCount === 5
             ? 3
@@ -56,6 +51,7 @@ function generateRoles(
             : playerCount >= 7 && playerCount <= 8
             ? 5
             : 6;
+
     const fascistCount = playerCount - liberalCount - 1; // Subtract one for Hitler
 
     // Add Hitler

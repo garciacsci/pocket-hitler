@@ -39,5 +39,46 @@
       }
     ],
     "state": "started"
+  },
+  "b": {
+    "roles": [],
+    "players": [
+      {
+        "name": "1",
+        "role": {
+          "faction": "Fascist",
+          "identity": "Hitler"
+        }
+      },
+      {
+        "name": "2",
+        "role": {
+          "faction": "Liberal",
+          "identity": "Liberal"
+        }
+      },
+      {
+        "name": "3",
+        "role": {
+          "faction": "Fascist",
+          "identity": "Fascist"
+        }
+      },
+      {
+        "name": "4",
+        "role": {
+          "faction": "Liberal",
+          "identity": "Liberal"
+        }
+      },
+      {
+        "name": "5",
+        "role": {
+          "faction": "Liberal",
+          "identity": "Liberal"
+        }
+      }
+    ],
+    "state": "started"
   }
 }
