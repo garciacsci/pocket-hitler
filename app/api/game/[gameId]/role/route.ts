@@ -34,7 +34,7 @@ export async function GET(req: NextRequest, context: any) {
     }
 
     return NextResponse.json({
-        role: player.role.role,
+        faction: player.role.faction,
         identity: player.role.identity,
     });
 }

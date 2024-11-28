@@ -90,12 +90,12 @@ export function LobbyStep() {
     }
 
     const handleStartGame = async () => {
-        if (gameState !== "waiting") {
-            alert("Game has already started.");
-            return;
-        }
+        // if (gameState !== "waiting") {
+        //     alert("Game has already started.");
+        //     return;
+        // }
 
-        if (players[0]?.name !== playerName) {
+        if (players[0]?.name !== playerName && gameState == "waiting") {
             alert("Only the host can start the game.");
             return;
         }
@@ -107,7 +107,7 @@ export function LobbyStep() {
 
         try {
             const response = await fetch(`/api/game/${room}/assign-roles`, {
-                method: "POST",
+                method: "POST"
             });
 
             const data = await response.json();
@@ -115,7 +115,7 @@ export function LobbyStep() {
             if (response.ok) {
                 router.push(
                     `/game-step?room=${room}&name=${encodeURIComponent(
-                        playerName
+                        playerName || ""
                     )}`
                 );
             } else {

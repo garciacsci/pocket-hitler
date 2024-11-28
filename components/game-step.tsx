@@ -28,15 +28,30 @@ export function GameStep() {
 
         const fetchRole = async () => {
             try {
-                const response = await fetch(`/api/game/${room}/role?name=${encodeURIComponent(playerName)}`);
+                const response = await fetch(
+                    `/api/game/${room}/role?name=${encodeURIComponent(
+                        playerName
+                    )}`
+                );
                 if (response.ok) {
                     const data = await response.json();
-                    setIdentity(data.role);
-                    setFaction(data.identity);
+                    setIdentity(data.identity);
+                    setFaction(data.faction);
                 } else {
                     const data = await response.json();
-                    alert(data.error || "Failed to fetch role.");
-                    router.push("/");
+                    if (data.error === "Game has not started yet") {
+                        alert(
+                            "The game has not started yet. Please wait for the host to start the game."
+                        );
+                        router.push(
+                            `/lobby?room=${room}&name=${encodeURIComponent(
+                                playerName || ""
+                            )}`
+                        );
+                    } else {
+                        alert(data.error || "Failed to fetch role.");
+                        router.push("/");
+                    }
                 }
             } catch (error) {
                 console.error("Error fetching role:", error);
@@ -49,7 +64,9 @@ export function GameStep() {
     }, [room, playerName]);
 
     const handleBack = () => {
-        router.push("/lobby");
+        router.push(
+            `/lobby?room=${room}&name=${encodeURIComponent(playerName || "")}`
+        );
     };
     const toggleFaction = () => {
         setShowFaction((prev) => !prev);
@@ -76,7 +93,7 @@ export function GameStep() {
                     onClick={toggleIdentity}
                 >
                     <Users className="mr-2 h-4 w-4" />
-                    {showIdentity ? identity : "Reveal Role"}
+                    {showIdentity ? identity : "Reveal Identity"}
                 </Button>
             </CardContent>
         </Card>

@@ -13,12 +13,12 @@ export async function POST(req: NextRequest, context: any) {
 
     const game = games[gameId];
 
-    if (game.state !== "waiting") {
-        return NextResponse.json(
-            { error: "Game has already started" },
-            { status: 400 }
-        );
-    }
+    // if (game.state !== "waiting") {
+    //     return NextResponse.json(
+    //         { error: "Game has already started" },
+    //         { status: 400 }
+    //     );
+    // }
 
     if (game.players.length < 5) {
         return NextResponse.json(
@@ -44,7 +44,7 @@ export async function POST(req: NextRequest, context: any) {
 
 function generateRoles(
     playerCount: number
-): { role: string; identity: string }[] {
+): { faction: string; identity: string }[] {
     const roles = [];
 
     // Distribution of roles based on the player count
@@ -59,16 +59,16 @@ function generateRoles(
     const fascistCount = playerCount - liberalCount - 1; // Subtract one for Hitler
 
     // Add Hitler
-    roles.push({ role: "Hitler", identity: "Fascist" });
+    roles.push({ faction: "Fascist", identity: "Hitler" });
 
     // Add Fascists
     for (let i = 0; i < fascistCount; i++) {
-        roles.push({ role: "Fascist", identity: "Fascist" });
+        roles.push({ faction: "Fascist", identity: "Fascist" });
     }
 
     // Add Liberals
     for (let i = 0; i < liberalCount; i++) {
-        roles.push({ role: "Liberal", identity: "Liberal" });
+        roles.push({ faction: "Liberal", identity: "Liberal" });
     }
 
     return roles;

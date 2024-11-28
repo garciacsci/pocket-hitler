@@ -3,38 +3,38 @@
     "roles": [],
     "players": [
       {
-        "name": "Macbook",
+        "name": "1",
         "role": {
-          "role": "Liberal",
+          "faction": "Liberal",
           "identity": "Liberal"
         }
       },
       {
         "name": "2",
         "role": {
-          "role": "Liberal",
+          "faction": "Liberal",
           "identity": "Liberal"
         }
       },
       {
         "name": "3",
         "role": {
-          "role": "Fascist",
-          "identity": "Fascist"
+          "faction": "Liberal",
+          "identity": "Liberal"
         }
       },
       {
         "name": "4",
         "role": {
-          "role": "Hitler",
-          "identity": "Fascist"
+          "faction": "Fascist",
+          "identity": "Hitler"
         }
       },
       {
         "name": "5",
         "role": {
-          "role": "Liberal",
-          "identity": "Liberal"
+          "faction": "Fascist",
+          "identity": "Fascist"
         }
       }
     ],
