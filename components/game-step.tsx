@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -10,29 +10,57 @@ import {
     CardTitle
 } from "@/components/ui/card";
 import { Users, Shield } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export function GameStep() {
-    const [identity, setIdentity] = useState("Pookie");
-    const [faction, setFaction] = useState("Liberal");
+    const [identity, setIdentity] = useState("");
+    const [faction, setFaction] = useState("");
+    const [showIdentity, setShowIdentity] = useState(false);
+    const [showFaction, setShowFaction] = useState(false);
 
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const room = searchParams.get("room");
+    const playerName = searchParams.get("name");
+
+    useEffect(() => {
+        if (!room || !playerName) return;
+
+        const fetchRole = async () => {
+            try {
+                const response = await fetch(`/api/game/${room}/role?name=${encodeURIComponent(playerName)}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    setIdentity(data.role);
+                    setFaction(data.identity);
+                } else {
+                    const data = await response.json();
+                    alert(data.error || "Failed to fetch role.");
+                    router.push("/");
+                }
+            } catch (error) {
+                console.error("Error fetching role:", error);
+                alert("An error occurred while fetching your role.");
+                router.push("/");
+            }
+        };
+
+        fetchRole();
+    }, [room, playerName]);
 
     const handleBack = () => {
         router.push("/lobby");
     };
     const toggleFaction = () => {
-        setFaction((prevFaction) =>
-            prevFaction === "Liberal" ? "Faction" : "Liberal"
-        );
+        setShowFaction((prev) => !prev);
     };
-    const toggleIdentity = () => {};
+
+    const toggleIdentity = () => {
+        setShowIdentity((prev) => !prev);
+    };
 
     return (
         <Card className="w-[320px] bg-gray-900/50 border-gray-800">
-            {/* <CardHeader>
-                <CardTitle className="text-xl text-center text-white"></CardTitle>
-            </CardHeader> */}
             <CardContent className="space-y-4 pt-4">
                 <Button
                     variant="outline"
@@ -40,7 +68,7 @@ export function GameStep() {
                     onClick={toggleFaction}
                 >
                     <Shield className="mr-2 h-4 w-4" />
-                    {faction}
+                    {showFaction ? faction : "Reveal Faction"}
                 </Button>
                 <Button
                     variant="outline"
@@ -48,18 +76,9 @@ export function GameStep() {
                     onClick={toggleIdentity}
                 >
                     <Users className="mr-2 h-4 w-4" />
-                    {identity}
+                    {showIdentity ? identity : "Reveal Role"}
                 </Button>
             </CardContent>
-            {/* <CardFooter>
-                <Button
-                    variant="outline"
-                    onClick={handleBack}
-                    className="w-full bg-gray-800 border-gray-700 hover:bg-gray-700 text-white"
-                >
-                    Back to Lobby
-                </Button>
-            </CardFooter> */}
         </Card>
     );
 }
