@@ -13,17 +13,47 @@ export function InitialStep() {
 
     const router = useRouter();
 
-    const handleNext = () => {
-        // Here you would typically handle the game code (create or join)
-        // For now, we'll just navigate to the next step
-        router.push("/lobby");
+    const validateGameCode = (code: string) => /^[a-zA-Z0-9]+$/.test(code);
+
+    const handleCreateRoom = async () => {
+        let newGameCode = gameCode;
+        if (!newGameCode) {
+            newGameCode = Math.random().toString(36).substr(2, 6).toUpperCase();
+        } else if (!validateGameCode(newGameCode)) {
+            alert("Game code must be alphanumeric.");
+            return;
+        }
+
+        if (!playerName) {
+            alert("Player name is required.");
+            return;
+        }
+
+        try {
+            const response = await fetch("/api/game", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ gameId: newGameCode })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                router.push(`/lobby?room=${newGameCode}&name=${encodeURIComponent(playerName)}`);
+            } else {
+                alert(data.error || "Failed to create game.");
+            }
+        } catch (error) {
+            console.error("Error creating game:", error);
+            alert("An error occurred while creating the game.");
+        }
     };
 
-    const validateRoomCode = () => {};
-
-    const handleCreateRoom = () => {};
-
-    const handleJoinRoom = () => {};
+    const handleJoinRoom = () => {
+        
+    };
 
     return (
         <Card className="w-[320px] bg-gray-900/50 border-gray-800">
@@ -48,7 +78,7 @@ export function InitialStep() {
                 <div className="grid grid-cols-2 gap-2">
                     <Button
                         variant="outline"
-                        onClick={handleNext}
+                        onClick={handleCreateRoom}
                         className="bg-gray-800 border-gray-700 hover:bg-gray-700 text-white"
                     >
                         <UserPlus className="mr-2 h-4 w-4" />
@@ -56,7 +86,7 @@ export function InitialStep() {
                     </Button>
                     <Button
                         variant="outline"
-                        onClick={handleNext}
+                        onClick={handleJoinRoom}
                         className="bg-gray-800 border-gray-700 hover:bg-gray-700 text-white"
                     >
                         <UserPlus2 className="mr-2 h-4 w-4" />
