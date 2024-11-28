@@ -1,9 +1,8 @@
-
 import { NextRequest, NextResponse } from "next/server";
 import { readGames } from "@/utils/database";
 
-export async function GET(req: NextRequest, { params }: any) {
-    const { gameId } = params;
+export async function GET(req: NextRequest, context: any) {
+    const { gameId } = await context.params;
 
     const games = await readGames();
 

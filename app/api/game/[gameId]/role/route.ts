@@ -2,19 +2,29 @@
 import { NextRequest, NextResponse } from "next/server";
 import { readGames } from "@/utils/database";
 
-export async function GET(req: NextRequest, { params }: any) {
-    const { gameId } = params;
-    const playerId = req.nextUrl.searchParams.get("playerId");
+export async function GET(req: NextRequest, context: any) {
+    const { gameId } = await context.params;
+    const playerName = req.nextUrl.searchParams.get("name");
 
     const games = await readGames();
 
     if (!games[gameId]) {
-        return NextResponse.json({ error: "Game not found" }, { status: 404 });
+        return NextResponse.json(
+            { error: "Game not found" },
+            { status: 404 }
+        );
     }
 
-    const player = games[gameId].players.find(
-        (p: any) => p.playerId === playerId
-    );
+    const game = games[gameId];
+
+    if (game.state !== "started") {
+        return NextResponse.json(
+            { error: "Game has not started yet" },
+            { status: 400 }
+        );
+    }
+
+    const player = game.players.find((p: any) => p.name === playerName);
 
     if (!player) {
         return NextResponse.json(

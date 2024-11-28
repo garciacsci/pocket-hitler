@@ -1,20 +1,28 @@
 {
-  "test": {
+  "a": {
     "roles": [],
     "players": [
       {
-        "name": "Name"
-      }
-    ],
-    "state": "waiting"
-  },
-  "6SH7P5": {
-    "roles": [],
-    "players": [
+        "name": "Macbook",
+        "role": "Hitler"
+      },
       {
-        "name": "Chris"
+        "name": "Phone",
+        "role": "Fascist"
+      },
+      {
+        "name": "TestMac",
+        "role": "Liberal"
+      },
+      {
+        "name": "test3",
+        "role": "Liberal"
+      },
+      {
+        "name": "test4",
+        "role": "Liberal"
       }
     ],
-    "state": "waiting"
+    "state": "started"
   }
 }

@@ -19,6 +19,8 @@ interface Player {
 
 export function LobbyStep() {
     const [players, setPlayers] = useState<Player[]>([]);
+    const [joined, setJoined] = useState(false);
+    const [gameState, setGameState] = useState<string>("waiting");
     const router = useRouter();
 
     const searchParams = useSearchParams();
@@ -26,7 +28,7 @@ export function LobbyStep() {
     const playerName = searchParams.get("name");
 
     useEffect(() => {
-        if (!room || !playerName) return;
+        if (!room || !playerName || joined) return;
 
         const joinGame = async () => {
             try {
@@ -47,6 +49,8 @@ export function LobbyStep() {
                     return;
                 }
 
+                setJoined(true); // Mark as joined to prevent re-joining
+
                 // Fetch the game state
                 await fetchGameState();
             } catch (error) {
@@ -63,6 +67,7 @@ export function LobbyStep() {
 
                 if (response.ok) {
                     setPlayers(data.players);
+                    setGameState(data.state);
                 } else {
                     alert(data.error || "Failed to fetch game state.");
                 }
@@ -74,14 +79,53 @@ export function LobbyStep() {
 
         joinGame();
 
-        // Optionally, set up polling or WebSocket for real-time updates
-    }, [room, playerName]);
+        // Poll for game state every 2 seconds
+        const interval = setInterval(fetchGameState, 2000);
+
+        return () => clearInterval(interval);
+    }, [room, playerName, joined]);
 
     if (!room) {
         return <div>Room not specified</div>;
     }
 
-    const handleStartGame = () => {};
+    const handleStartGame = async () => {
+        if (gameState !== "waiting") {
+            alert("Game has already started.");
+            return;
+        }
+
+        if (players[0]?.name !== playerName) {
+            alert("Only the host can start the game.");
+            return;
+        }
+
+        if (players.length < 5) {
+            alert("At least 5 players are required to start the game.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/game/${room}/assign-roles`, {
+                method: "POST",
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                router.push(
+                    `/game-step?room=${room}&name=${encodeURIComponent(
+                        playerName
+                    )}`
+                );
+            } else {
+                alert(data.error || "Failed to start the game.");
+            }
+        } catch (error) {
+            console.error("Error starting game:", error);
+            alert("An error occurred while starting the game.");
+        }
+    };
 
     return (
         <Card className="w-[320px] bg-gray-900/50 border-gray-800">
@@ -110,9 +154,14 @@ export function LobbyStep() {
                 <Button
                     className="w-full bg-primary hover:bg-primary/90"
                     onClick={handleStartGame}
+                    disabled={
+                        (gameState === "waiting" &&
+                            players[0]?.name !== playerName) ||
+                        players.length < 5
+                    }
                 >
                     <Users className="mr-2 h-4 w-4" />
-                    Start Game
+                    {gameState === "waiting" ? "Start Game" : "View Role"}
                 </Button>
             </CardFooter>
         </Card>
