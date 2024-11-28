@@ -25,6 +25,58 @@ export function LobbyStep() {
     const room = searchParams.get("room");
     const playerName = searchParams.get("name");
 
+    useEffect(() => {
+        if (!room || !playerName) return;
+
+        const joinGame = async () => {
+            try {
+                // Join the game
+                const response = await fetch(`/api/game/${room}/join`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ playerName })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    alert(data.error || "Failed to join game.");
+                    router.push("/");
+                    return;
+                }
+
+                // Fetch the game state
+                await fetchGameState();
+            } catch (error) {
+                console.error("Error joining game:", error);
+                alert("An error occurred while joining the game.");
+                router.push("/");
+            }
+        };
+
+        const fetchGameState = async () => {
+            try {
+                const response = await fetch(`/api/game/${room}`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    setPlayers(data.players);
+                } else {
+                    alert(data.error || "Failed to fetch game state.");
+                }
+            } catch (error) {
+                console.error("Error fetching game state:", error);
+                alert("An error occurred while fetching the game state.");
+            }
+        };
+
+        joinGame();
+
+        // Optionally, set up polling or WebSocket for real-time updates
+    }, [room, playerName]);
+
     if (!room) {
         return <div>Room not specified</div>;
     }

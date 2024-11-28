@@ -1,0 +1,20 @@
+{
+  "test": {
+    "roles": [],
+    "players": [
+      {
+        "name": "Name"
+      }
+    ],
+    "state": "waiting"
+  },
+  "6SH7P5": {
+    "roles": [],
+    "players": [
+      {
+        "name": "Chris"
+      }
+    ],
+    "state": "waiting"
+  }
+}

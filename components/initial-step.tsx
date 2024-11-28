@@ -51,8 +51,30 @@ export function InitialStep() {
         }
     };
 
-    const handleJoinRoom = () => {
-        
+    const handleJoinRoom = async () => {
+        if (!gameCode || !validateGameCode(gameCode)) {
+            alert("Please enter a valid game code.");
+            return;
+        }
+
+        if (!playerName) {
+            alert("Player name is required.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/game/${gameCode}`);
+
+            if (!response.ok) {
+                alert("Game not found.");
+                return;
+            }
+
+            router.push(`/lobby?room=${gameCode}&name=${encodeURIComponent(playerName)}`);
+        } catch (error) {
+            console.error("Error joining game:", error);
+            alert("An error occurred while joining the game.");
+        }
     };
 
     return (

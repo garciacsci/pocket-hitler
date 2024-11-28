@@ -4,7 +4,7 @@ import { readGames, writeGames } from "@/utils/database";
 
 export async function POST(req: NextRequest, { params }: any) {
     const { gameId } = params;
-    const { playerId } = await req.json();
+    const { playerName } = await req.json();
 
     const games = await readGames();
 
@@ -12,7 +12,15 @@ export async function POST(req: NextRequest, { params }: any) {
         return NextResponse.json({ error: "Game not found" }, { status: 404 });
     }
 
-    games[gameId].players.push({ playerId, role: null });
+    // Check if player already joined
+    if (games[gameId].players.some((p: any) => p.name === playerName)) {
+        return NextResponse.json(
+            { error: "Player name already taken in this game" },
+            { status: 400 }
+        );
+    }
+
+    games[gameId].players.push({ name: playerName });
     await writeGames(games);
 
     return NextResponse.json({ success: true });
