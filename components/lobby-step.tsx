@@ -28,6 +28,12 @@ export function LobbyStep() {
     const playerName = searchParams.get("name");
 
     useEffect(() => {
+        setPlayers([]);
+        setJoined(false);
+        setGameState("waiting");
+    }, []);
+
+    useEffect(() => {
         if (!room || !playerName || joined) return;
 
         const joinGame = async () => {
@@ -127,6 +133,14 @@ export function LobbyStep() {
         }
     };
 
+    const handleViewRole = async () => {
+        router.push(
+            `/game-step?room=${room}&name=${encodeURIComponent(
+                playerName || ""
+            )}`
+        );
+    };
+
     return (
         <Card className="w-[320px] bg-gray-900/50 border-gray-800">
             <CardHeader>
@@ -151,18 +165,30 @@ export function LobbyStep() {
                 </div>
             </CardContent>
             <CardFooter>
-                <Button
-                    className="w-full bg-primary hover:bg-primary/90"
-                    onClick={handleStartGame}
-                    disabled={
-                        (gameState === "waiting" &&
-                            players[0]?.name !== playerName) ||
-                        players.length < 5
-                    }
-                >
-                    <Users className="mr-2 h-4 w-4" />
-                    {gameState === "waiting" ? "Start Game" : "View Role"}
-                </Button>
+                {playerName === players[0]?.name && gameState === "waiting" ? (
+                    <Button
+                        className="w-full bg-primary hover:bg-primary/90"
+                        onClick={handleStartGame}
+                        disabled={
+                            (gameState === "waiting" &&
+                                players[0]?.name !== playerName) ||
+                            players.length < 5
+                        }
+                    >
+                        <Users className="mr-2 h-4 w-4" />
+                        {gameState === "waiting" ? "Start Game" : "View Role"}
+                    </Button>
+                ) : (
+                    gameState === "started" && (
+                        <Button
+                            className="w-full bg-primary hover:bg-primary/90"
+                            onClick={handleViewRole}
+                        >
+                            <Users className="mr-2 h-4 w-4" />
+                            View Role
+                        </Button>
+                    )
+                )}
             </CardFooter>
         </Card>
     );

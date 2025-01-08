@@ -24,6 +24,13 @@ export function GameStep() {
     const playerName = searchParams.get("name");
 
     useEffect(() => {
+        setIdentity("");
+        setFaction("");
+        setShowIdentity(false);
+        setShowFaction(false);
+    }, []);
+
+    useEffect(() => {
         if (!room || !playerName) return;
 
         const fetchRole = async () => {

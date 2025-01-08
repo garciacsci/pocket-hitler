@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,12 +13,21 @@ export function InitialStep() {
 
     const router = useRouter();
 
+    useEffect(() => {
+        setGameCode("");
+        setPlayerName("");
+    }, []);
+
     const validateGameCode = (code: string) => /^[a-zA-Z0-9]+$/.test(code);
+
+    const generateGameCode = () => {
+        return Math.random().toString(36).substr(2, 6).toUpperCase();
+    };
 
     const handleCreateRoom = async () => {
         let newGameCode = gameCode;
         if (!newGameCode) {
-            newGameCode = Math.random().toString(36).substr(2, 6).toUpperCase();
+            newGameCode = generateGameCode();
         } else if (!validateGameCode(newGameCode)) {
             alert("Game code must be alphanumeric.");
             return;

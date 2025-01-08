@@ -1,78 +1,123 @@
 {
-  "a": {
+  "A": {
     "roles": [],
     "players": [
       {
-        "name": "1",
+        "name": "Chris",
         "role": {
           "faction": "Liberal",
           "identity": "Liberal"
         }
       },
       {
-        "name": "2",
+        "name": "mattibraps",
         "role": {
           "faction": "Liberal",
           "identity": "Liberal"
         }
       },
       {
-        "name": "3",
+        "name": "Cha cha",
         "role": {
           "faction": "Liberal",
           "identity": "Liberal"
         }
       },
       {
-        "name": "4",
+        "name": "Kimmers",
+        "role": {
+          "faction": "Liberal",
+          "identity": "Liberal"
+        }
+      },
+      {
+        "name": "autumn",
+        "role": {
+          "faction": "Liberal",
+          "identity": "Liberal"
+        }
+      },
+      {
+        "name": "Elora",
+        "role": {
+          "faction": "Fascist",
+          "identity": "Fascist"
+        }
+      },
+      {
+        "name": "kelsgf",
+        "role": {
+          "faction": "Fascist",
+          "identity": "Fascist"
+        }
+      },
+      {
+        "name": "kira",
         "role": {
           "faction": "Fascist",
           "identity": "Hitler"
         }
       },
       {
-        "name": "5",
-        "role": {
-          "faction": "Fascist",
-          "identity": "Fascist"
-        }
+        "name": "Cha cha "
       }
     ],
     "state": "started"
   },
-  "b": {
+  "B": {
     "roles": [],
     "players": [
       {
-        "name": "1",
-        "role": {
-          "faction": "Fascist",
-          "identity": "Hitler"
-        }
-      },
-      {
-        "name": "2",
-        "role": {
-          "faction": "Liberal",
-          "identity": "Liberal"
-        }
-      },
-      {
-        "name": "3",
+        "name": "Chris",
         "role": {
           "faction": "Fascist",
           "identity": "Fascist"
         }
       },
       {
-        "name": "4",
+        "name": "mattibraps",
         "role": {
           "faction": "Liberal",
           "identity": "Liberal"
         }
       },
       {
-        "name": "5",
+        "name": "Cha ",
+        "role": {
+          "faction": "Liberal",
+          "identity": "Liberal"
+        }
+      },
+      {
+        "name": "Kimmers",
+        "role": {
+          "faction": "Fascist",
+          "identity": "Fascist"
+        }
+      },
+      {
+        "name": "autumn",
+        "role": {
+          "faction": "Liberal",
+          "identity": "Liberal"
+        }
+      },
+      {
+        "name": "Elora",
+        "role": {
+          "faction": "Fascist",
+          "identity": "Hitler"
+        }
+      },
+      {
+        "name": "kelsgf",
+        "role": {
+          "faction": "Liberal",
+          "identity": "Liberal"
+        }
+      },
+      {
+        "name": "kira",
         "role": {
           "faction": "Liberal",
           "identity": "Liberal"

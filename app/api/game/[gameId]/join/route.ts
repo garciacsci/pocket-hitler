@@ -12,16 +12,15 @@ export async function POST(req: NextRequest, context: any) {
         return NextResponse.json({ error: "Game not found" }, { status: 404 });
     }
 
+    
+
     // Check if player already exists
     const playerExists = games[gameId].players.some(
         (p: any) => p.name === playerName
     );
 
-    if (games[gameId].players.length >= 10) {
-        return NextResponse.json(
-            { error: "Lobby is full" },
-            { status: 400 }
-        );
+    if (games[gameId].players.length > 10) {
+        return NextResponse.json({ error: "Lobby is full" }, { status: 400 });
     }
 
     if (!playerExists) {
